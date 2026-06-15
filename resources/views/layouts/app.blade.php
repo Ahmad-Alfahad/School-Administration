@@ -17,9 +17,8 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-        @include('layouts.navigation')
-        <div class="flex ">
+    <div class="min-h-screen bg-slate-100 dark:bg-gray-900">
+        <div class="flex">
             @include('layouts.sidebar')
             <div class="flex-2 w-full ">
                 <!-- Page Heading  -->

@@ -3,7 +3,7 @@ namespace App\Repositories;
 
 use App\Models\Classroom;
 
-class ClassroomRepository 
+class ClassroomRepository
 {
     public function getAll()
     {
@@ -20,14 +20,25 @@ class ClassroomRepository
         return Classroom::create($data);
     }
 
-    public function update(Classroom $classroom , array $data)
+    public function update(Classroom $classroom, array $data)
     {
-        $classroom ->update($data);
-        return $classroom;  
+        $classroom->update($data);
+        return $classroom;
     }
 
     public function delete(Classroom $classroom)
     {
         return $classroom->delete();
+    }
+
+    public function existsByName(string $name, ?int $ignoreId = null): bool
+    {
+        return Classroom::query()
+            ->where('name', $name)
+            ->when(
+                $ignoreId,
+                fn($query) => $query->where('id', '!=', $ignoreId)
+            )
+            ->exists();
     }
 }

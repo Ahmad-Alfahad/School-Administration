@@ -26,11 +26,18 @@ class ClassroomService
 
     public function createClassroom(array $data)
     {
+        $this->ensureClassroomNameIsUnique(
+            $data['name']
+        );
         return $this->classroomRepository->create($data);
     }
 
     public function updateClassroom(Classroom $classroom, array $data)
     {
+        $this->ensureClassroomNameIsUnique(
+            $data['name'],
+            $classroom->id
+        );
         return $this->classroomRepository->update(
             $classroom,
             $data
@@ -40,7 +47,8 @@ class ClassroomService
     public function deleteClassroom(Classroom $classroom)
     {
         $this->ensureClassroomCanBeDeleted(
-            $classroom);
+            $classroom
+        );
 
         return $this->classroomRepository->delete(
             $classroom
@@ -60,6 +68,19 @@ class ClassroomService
 
             throw new \DomainException(
                 'Cannot delete a classroom that contains teachers.'
+            );
+        }
+    }
+
+    private function ensureClassroomNameIsUnique(string $name, ?int $ignoreId = null): void
+    {
+        $exists = $this->classroomRepository
+            ->existsByName($name, $ignoreId);
+
+
+        if ($exists) {
+            throw new \DomainException(
+                'A classroom with this name already exists.'
             );
         }
     }

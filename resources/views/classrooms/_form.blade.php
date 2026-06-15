@@ -44,7 +44,7 @@
                value="{{ old('description', $classroom->description ?? '') }}" 
                placeholder="description"
                class="w-full rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 dark:focus:border-emerald-500 transition-all duration-200 @error('capacity') border-rose-500 dark:border-rose-500 focus:ring-rose-500/20 focus:border-rose-500 @enderror"
-               required>
+               >
         @error('description')
             <p class="mt-2 text-sm text-rose-600 dark:text-rose-400 font-medium">{{ $message }}</p>
         @enderror

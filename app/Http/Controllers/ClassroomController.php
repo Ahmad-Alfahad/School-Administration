@@ -31,16 +31,27 @@ class ClassroomController extends Controller
 
     public function store(StoreClassroomRequest $request)
     {
-        $this->classroomService->createClassroom(
-            $request->validated()
-        );
+        try {
 
-        return redirect()
-            ->route('classrooms.index')
-            ->with(
-                'success',
-                'Classroom created successfully.'
-            );
+            $this->classroomService
+                ->createClassroom($request->validated());
+
+            return redirect()
+                ->route('classrooms.index')
+                ->with(
+                    'success',
+                    'Classroom created successfully.'
+                );
+
+        } catch (\DomainException $e) {
+
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    $e->getMessage()
+                );
+        }
     }
 
     public function show($id)
@@ -64,17 +75,30 @@ class ClassroomController extends Controller
 
     public function update(UpdateClassroomRequest $request, Classroom $classroom)
     {
-        $this->classroomService->updateClassroom(
-            $classroom,
-            $request->validated()
-        );
+        try {
 
-        return redirect()
-            ->route('classrooms.index')
-            ->with(
-                'success',
-                'Classroom updated successfully.'
-            );
+            $this->classroomService
+                ->updateClassroom(
+                    $classroom,
+                    $request->validated()
+                );
+
+            return redirect()
+                ->route('classrooms.index')
+                ->with(
+                    'success',
+                    'Classroom updated successfully.'
+                );
+
+        } catch (\DomainException $e) {
+
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    $e->getMessage()
+                );
+        }
     }
 
     public function destroy(Classroom $classroom)

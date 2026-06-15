@@ -7,12 +7,12 @@ class ClassroomRepository
 {
     public function getAll()
     {
-        return Classroom::latest()->get();
+        return Classroom::withCount('students')->latest()->get();
     }
 
     public function findById(int $id)
     {
-        return Classroom::with(['students' , 'teachers'])->findOrFail($id);
+        return Classroom::with(['teachers'])->withCount('students')->findOrFail($id);
     }
 
     public function create(array $data)

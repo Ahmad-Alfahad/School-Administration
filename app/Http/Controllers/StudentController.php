@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Classroom;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Services\StudentService;
@@ -26,21 +27,34 @@ class StudentController extends Controller
 
     public function create()
     {
-        return view('students.create');
+        $classrooms = Classroom::all();
+        return view('students.create', compact('classrooms'));
     }
 
     public function store(StoreStudentRequest $request)
     {
-        $this->studentService->createStudent(
-            $request->validated()
-        );
+        try {
 
-        return redirect()
-            ->route('students.index')
-            ->with(
-                'success',
-                'Students created successfully.'
+            $this->studentService->createStudent(
+                $request->validated()
             );
+
+            return redirect()
+                ->route('students.index')
+                ->with(
+                    'success',
+                    'Student created successfully.'
+                );
+
+        } catch (\DomainException $e) {
+
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    $e->getMessage()
+                );
+        }
     }
 
     public function show($id)
@@ -49,32 +63,45 @@ class StudentController extends Controller
             ->getStudentById($id);
 
         return view(
-            'studetns.show',
+            'students.show',
             compact('student')
         );
     }
 
     public function edit(Student $student)
     {
+        $classrooms = Classroom::all();
         return view(
             'students.edit',
-            compact('student')
+            compact('student', 'classrooms')
         );
     }
 
     public function update(UpdateStudentRequest $request, Student $student)
     {
-        $this->studentService->updateStudent(
-            $student,
-            $request->validated()
-        );
+        try {
 
-        return redirect()
-            ->route('students.index')
-            ->with(
-                'success',
-                'Student updated successfully.'
+            $this->studentService->updateStudent(
+                $student,
+                $request->validated()
             );
+
+            return redirect()
+                ->route('students.index')
+                ->with(
+                    'success',
+                    'Student updated successfully.'
+                );
+
+        } catch (\DomainException $e) {
+
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    $e->getMessage()
+                );
+        }
     }
 
     public function destroy(Student $student)

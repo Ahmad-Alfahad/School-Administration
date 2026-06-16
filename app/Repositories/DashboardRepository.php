@@ -32,12 +32,11 @@ class DashboardRepository
             ->take($limit)
             ->get();
     }
-    public function getClassroomDistribution( int $limit = 6)
+    public function getClassroomDistribution()
     {
         return Classroom::withCount('students')
             ->orderBy('students_count', 'desc')
             ->latest()
-            ->take($limit)
             ->get();
     }
 }

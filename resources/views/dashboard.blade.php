@@ -1,10 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 <span class="text-indigo-600">🏫</span>{{ __('School Dashboard') }}
             </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">
+                Modify contact records, academic specialization, or change the assigned classroom.
+            </p>
+
         </div>
+
     </x-slot>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -84,7 +89,7 @@
             <div class="flex items-center gap-2">
                 <span class="w-2 h-6 bg-indigo-600 rounded-full"></span>
                 <h2 class="text-xl font-bold text-slate-800">Recent Students</h2>
-            </div>  
+            </div>
             <a href="{{ route('students.index') }}"
                 class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-xl transition-all duration-200">
                 View All←
@@ -180,45 +185,72 @@
             <span class="w-2 h-6 bg-amber-500 rounded-full"></span>
             <h2 class="text-xl font-bold text-slate-800">Classrooms Capacity</h2>
         </div>
+        <div
+            class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-6 flex flex-col h-[450px]">
 
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800 mb-4">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-slate-100">Classroom Occupancy</h3>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Live student capacity distribution</p>
+                </div>
+                <a href="{{ route('classrooms.index') }}"
+                    class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1.5 rounded-lg transition-all">
+                    View All
+                </a>
+            </div>
+
+            <div class="flex-1 overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+
                 @forelse($classroomDistribution as $classroom)
                             @php
-                                $percentage = $classroom->capacity > 0
-                                    ? round(($classroom->students_count / $classroom->capacity) * 100)
-                                    : 0;
+
+                                $capacity = $classroom->capacity ?? 1;
+                                $studentsCount = $classroom->students_count ?? 0;
+                                $percentage = min(100, round(($studentsCount / $capacity) * 100));
+
+                                $isFull = $percentage >= 100;
+                                $isWarning = $percentage >= 85 && $percentage < 100;
                             @endphp
 
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-all">
-                                <div class="flex justify-between items-center mb-3">
-                                    <div>
-                                        <h3 class="font-bold text-slate-800">{{ $classroom->name }}</h3>
-                                        <p class="text-xs text-slate-400 mt-0.5">
-                                            Registerd Students : {{ $classroom->students_count }} , From {{ $classroom->capacity }}
-                                        </p>
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center text-sm">
+                                    <div class="min-w-0">
+                                        <span class="font-semibold text-slate-800 dark:text-slate-200 block truncate">
+                                            {{ $classroom->name }}
+                                        </span>
+                                        <span class="text-[11px] text-slate-400 block">
+                                            {{ $studentsCount }} / {{ $capacity }} Seats Occupied
+                                        </span>
                                     </div>
 
-                                    <span class="text-xs font-bold px-2 py-1 rounded-md
-                                                                                {{ $percentage >= 90 ? 'bg-rose-50 text-rose-600' :
-                    ($percentage >= 70 ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600') }}">
+                                    <span class="text-xs font-bold px-2 py-0.5 rounded-md 
+                                                                                    {{ $isFull ? 'text-rose-600 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/30' :
+                    ($isWarning ? 'text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-950/30' :
+                        'text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30') }}">
                                         {{ $percentage }}%
                                     </span>
                                 </div>
 
-                                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
-                                    <div class="h-2.5 rounded-full transition-all duration-500 ease-out
-                                                                                {{ $percentage >= 90 ? 'bg-gradient-to-r from-rose-500 to-red-500' :
-                    ($percentage >= 70 ? 'bg-gradient-to-r from-amber-500 to-orange-500' : 'bg-gradient-to-r from-emerald-500 to-teal-500') }}"
+                                <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full transition-all duration-500 
+                                                                                    {{ $isFull ? 'bg-rose-500' : ($isWarning ? 'bg-amber-500' : 'bg-emerald-500') }}"
                                         style="width: {{ $percentage }}%">
                                     </div>
                                 </div>
                             </div>
+
                 @empty
-                    <div class="col-span-full text-center text-slate-400 py-8">
-                        No Classroom Found.
+                    <div class="h-full flex flex-col items-center justify-center text-center py-12">
+                        <svg class="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                        <p class="text-xs font-medium text-slate-400">No classroom configurations found.</p>
                     </div>
                 @endforelse
+
             </div>
         </div>
     </div>

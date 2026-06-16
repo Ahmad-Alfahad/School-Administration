@@ -13,7 +13,7 @@ window.confirmDelete = function (form) {
         title: "Delete Record?",
         text: "This action cannot be undone and will permanently remove this data.",
         icon: "warning",
-        iconColor: "#f43f5e",
+        iconColor: "#f43f5e", 
         showCancelButton: true,
         confirmButtonText: "Delete Record",
         cancelButtonText: "Cancel",
@@ -27,7 +27,7 @@ window.confirmDelete = function (form) {
                 "text-sm text-slate-500 dark:text-slate-400 my-3 font-medium leading-relaxed",
 
             confirmButton:
-                "bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-sm hover:shadow transition-all duration-200 mx-1.5 focus:ring-2 focus:ring-rose-500/20 cursor-pointer",
+                "bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-sm hover:shadow transition-all duration-200 mx-1.5  focus:ring-2 focus:ring-rose-500/20 cursor-pointer mr-2",
 
             cancelButton:
                 "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold px-5 py-2.5 rounded-xl shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-all duration-200 mx-1.5 focus:ring-2 focus:ring-slate-500/10 cursor-pointer",

@@ -31,12 +31,14 @@
                 @endisset
 
                 <!-- Page Content -->
-                <x-alerts.success />
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2">
 
-                <x-alerts.error/>
-                    <main class="flex-1 p-6 ">
-                        {{ $slot }}
-                    </main>
+                    <x-alerts.flash />
+
+                </div>
+                <main class="flex-1 p-6 ">
+                    {{ $slot }}
+                </main>
             </div>
         </div>
     </div>

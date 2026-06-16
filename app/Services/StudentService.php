@@ -11,7 +11,7 @@ class StudentService
     protected $studentRepository;
     protected $classroomRepository;
 
-    public function __construct(StudentRepository $studentRepository , ClassroomRepository $classroomRepository)
+    public function __construct(StudentRepository $studentRepository, ClassroomRepository $classroomRepository)
     {
         $this->studentRepository = $studentRepository;
         $this->classroomRepository = $classroomRepository;
@@ -70,5 +70,11 @@ class StudentService
                 'This classroom has reached its maximum capacity.'
             );
         }
+    }
+
+    public function getPaginatedStudents(?string $search = null)
+    {
+        return $this->studentRepository
+            ->paginate(10, $search);
     }
 }

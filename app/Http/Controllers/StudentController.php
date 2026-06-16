@@ -7,7 +7,7 @@ use App\Models\Classroom;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Services\StudentService;
-
+use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
@@ -18,9 +18,12 @@ class StudentController extends Controller
         $this->studentService = $studentService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $students = $this->studentService->getAllStudents();
+        $students = $this->studentService
+            ->getPaginatedStudents(
+                $request->search
+            );
 
         return view('students.index', compact('students'));
     }

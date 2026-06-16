@@ -57,7 +57,7 @@ class ClassroomRepository
                     );
 
                 }
-            )
+            )->withCount('students')
 
             ->latest()
             ->paginate($perPage)

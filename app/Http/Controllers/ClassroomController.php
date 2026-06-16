@@ -6,7 +6,7 @@ use App\Models\Classroom;
 use App\Http\Requests\StoreClassroomRequest;
 use App\Http\Requests\UpdateClassroomRequest;
 use App\Services\ClassroomService;
-
+use Illuminate\Http\Request;
 
 class ClassroomController extends Controller
 {
@@ -17,9 +17,12 @@ class ClassroomController extends Controller
         $this->classroomService = $classroomService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $classrooms = $this->classroomService->getAllClassroooms();
+        $classrooms = $this->classroomService
+            ->getPaginatedClassrooms(
+                $request->search
+            );
 
         return view('classrooms.index', compact('classrooms'));
     }

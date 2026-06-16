@@ -84,4 +84,13 @@ class ClassroomService
             );
         }
     }
+
+    public function getPaginatedClassrooms(?string $search = null) 
+    {
+        return $this->classroomRepository
+            ->paginate(
+                10 ,
+                $search
+            );
+    }
 }

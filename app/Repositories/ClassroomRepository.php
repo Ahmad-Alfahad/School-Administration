@@ -41,4 +41,26 @@ class ClassroomRepository
             )
             ->exists();
     }
+
+    public function paginate(int $perPage = 10, ?string $search = null)
+    {
+        return Classroom::query()
+
+            ->when(
+                $search,
+                function ($query) use ($search) {
+
+                    $query->where(
+                        'name',
+                        'like',
+                        "%{$search}%"
+                    );
+
+                }
+            )
+
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+    }
 }

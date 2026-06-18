@@ -3,19 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
-use App\Models\Classroom;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Services\ClassroomService;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
     protected StudentService $studentService;
+    protected ClassroomService $classroomService;
 
-    public function __construct(StudentService $studentService)
+    public function __construct(StudentService $studentService , ClassroomService $classroomService)
     {
         $this->studentService = $studentService;
+        $this->classroomService = $classroomService;
     }
 
     public function index(Request $request)
@@ -30,7 +32,7 @@ class StudentController extends Controller
 
     public function create()
     {
-        $classrooms = Classroom::all();
+       $classrooms = $this->classroomService->getAllClassrooms();
         return view('students.create', compact('classrooms'));
     }
 
@@ -73,7 +75,7 @@ class StudentController extends Controller
 
     public function edit(Student $student)
     {
-        $classrooms = Classroom::all();
+       $classrooms = $this->classroomService->getAllClassrooms();
         return view(
             'students.edit',
             compact('student', 'classrooms')
